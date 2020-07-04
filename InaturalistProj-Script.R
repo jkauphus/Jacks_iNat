@@ -11,19 +11,26 @@ my_obs<-get_inat_obs_user(username = "jackkay", maxresults = 1000)
 str(my_obs)
 #Color iconic taxon name
 pal <- colorFactor(
-  palette = c("grey","purple", "blue", "yellow", "red", "sandybrown", "green", "black"),
+  palette = c("grey","purple", "yellow", "blue", "sandybrown", "green", "black", "red"),
   domain = my_obs$iconic_taxon_name
 )
+
+my_obs$label <- paste("<p>", my_obs$common_name, "<p>",
+                      "<p>", my_obs$scientific_name, "<p>",
+                      "<img src='", my_obs$image_url,"' width = '300px' height= '250px'>")
+
 
 
 leaflet(my_obs)%>% 
   addTiles() %>%
   addCircleMarkers(~longitude,~latitude, weight = 5,
-             popup = ~as.character(common_name), color = ~pal(iconic_taxon_name))
+                   popup = c(as.character(my_obs$label)),
+                             color = ~pal(iconic_taxon_name))
 
 ggplot(my_obs)+
   geom_bar(aes(x=iconic_taxon_name, fill = iconic_taxon_name))+
   ylab("Count (n)")+
   xlab("")+
-  scale_fill_manual(values = c("grey", "purple", "blue", "yellow", "red", "sandybrown", "green", "black"))+
-  theme_classic()
+  scale_fill_manual(values = c("grey","purple", "yellow", "blue", "sandybrown", "green", "black", "red"))+
+  theme_classic()+
+  guides(fill=guide_legend(title="Taxon Group"))
