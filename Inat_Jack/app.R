@@ -18,6 +18,10 @@ pal <- colorFactor(
     domain = my_obs$iconic_taxon_name
 )
 
+my_obs$label <- paste("<p>", my_obs$common_name, "<p>",
+                      "<p>", my_obs$scientific_name, "<p>",
+                      "<img src='", my_obs$image_url,"' width = '300px' height= '250px'>")
+
 #Creating Leaflet Map
 
 ui <- dashboardPage(
